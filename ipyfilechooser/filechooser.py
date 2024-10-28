@@ -21,6 +21,7 @@ class FileChooser(VBox, ValueWidget):
             title: str = '',
             select_desc: str = 'Select',
             change_desc: str = 'Change',
+            confirm_desc: str | None = None,
             show_hidden: bool = False,
             select_default: bool = False,
             dir_icon: Optional[str] = '\U0001F4C1 ',
@@ -46,6 +47,7 @@ class FileChooser(VBox, ValueWidget):
         self._show_hidden = show_hidden
         self._select_desc = select_desc
         self._change_desc = change_desc
+        self._confirm_desc = confirm_desc
         self._select_default = select_default
         self._dir_icon = dir_icon
         self._dir_icon_append = dir_icon_append
@@ -324,6 +326,10 @@ class FileChooser(VBox, ValueWidget):
         # Show dialog and cancel button
         self._gb.layout.display = None
         self._cancel.layout.display = None
+
+        # Update selection button description to confirm_desc if applicable
+        if self._confirm_desc is not None:
+            self._select.description = self._confirm_desc
 
         # Show the form with the correct path and filename
         if ((self._selected_path is not None) and (self._selected_filename is not None)):
@@ -605,6 +611,9 @@ class FileChooser(VBox, ValueWidget):
         properties += f", select_default={self._select_default}"
         properties += f", show_only_dirs={self._show_only_dirs}"
         properties += f", dir_icon_append={self._dir_icon_append}"
+
+        if self._confirm_desc is not None:
+            properties += f", confirm_desc='{self._confirm_desc}'"
 
         if self._sandbox_path is not None:
             properties += f", sandbox_path='{self._sandbox_path}'"
